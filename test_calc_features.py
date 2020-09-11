@@ -2,7 +2,7 @@
 # See https://github.com/sarabsethi/audioset_soundscape_feats_sethi2019/tree/master/calc_audioset_feats for installation instructions
 '''
 
-from AudiosetAnalysisBirds import AudiosetAnalysis
+from AudiosetAnalysisFunambulus import AudiosetAnalysis
 import os
 import pickle
 import wave
@@ -12,8 +12,8 @@ import contextlib
 # Get all mp3 or wav files in our audio directory
 species = input('Species name: ')
 Project_path = input('Project path: ')
-audio_dir = Project_path + 'bird_notes/' + species + '/'
-spec_dir = os.path.join(Project_path, 'bird_notes_embeddings', species)
+audio_dir = Project_path + 'squirrel_notes/' + species + '/'
+spec_dir = os.path.join(Project_path, 'squirrel_note_embeddings', species)
 if not os.path.exists(spec_dir):
   os.mkdir(spec_dir)
 all_fs = os.listdir(audio_dir)
@@ -38,6 +38,6 @@ for f in audio_fs:
     path = os.path.join(audio_dir, f)
     results = an.analyse_audio(path)
     results['species'] = species
-    file_name_f = spec_dir + '/' + f[8:-4] + '.pickle'
+    file_name_f = spec_dir + '/' + f[:-4] + '.pickle'
     with open(file_name_f, 'wb') as opo:
         pickle.dump(results, opo)
