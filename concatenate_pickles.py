@@ -1,13 +1,13 @@
-
 import pickle
 import numpy as np
 import os
 
-species = ['CUCE', 'FINI', 'MOFA', 'PHMA', 'POHO', 'PYJO']
+#species = ['CUCE', 'FINI', 'MOFA', 'PHMA', 'POHO', 'PYJO']
+species = ['dusky', 'ratufa', 'noise']
 concatenated_pickle = []
 for spp in species:
   Project_path = input('Project path: ')
-  folder_name = Project_path + 'bird_embeddings/' + spp + '/'
+  folder_name = Project_path + 'squirrel_note_embeddings/' + spp + '/'
   file_names = os.listdir(folder_name)
   print(['We are in species ' + spp]) 
   print(file_names)
@@ -20,6 +20,6 @@ for spp in species:
     concatenated_pickle.append([updated_audio_feats, sp_name, num_vecs])
 
 save_folder = Project_path + '/Data/'    
-save_file_name = save_folder + 'birds.pickle'
+save_file_name = save_folder + 'rnd.pickle'
 with open(save_file_name, 'wb') as opo:
   pickle.dump(concatenated_pickle, opo)
