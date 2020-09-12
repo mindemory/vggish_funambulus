@@ -3,11 +3,12 @@ import numpy as np
 import os
 import random
 
-species = ['CUCE', 'FINI', 'GASO', 'HYGA', 'MOFA', 'NOISE', 'PHMA', 'POHO']
+#species = ['CUCE', 'FINI', 'GASO', 'HYGA', 'MOFA', 'NOISE', 'PHMA', 'POHO']
+species = ['dusky', 'ratufa', 'noise']
 concatenated_pickle = []
 Project_path = input('Project path: ')
 for spp in species:
-  folder_name = Project_path + 'bird_notes_embeddings/' + spp + '/'
+  folder_name = Project_path + 'squirrel_note_embeddings/' + spp + '/'
   file_names = os.listdir(folder_name)
   print(['We are in species ' + spp]) 
   #print(file_names)
@@ -23,6 +24,25 @@ for spp in species:
       concatenated_pickle.append([audio_feats_data[row], sp_name, num_vecs])
     
 save_folder = Project_path + '/Data/'    
-save_file_name = save_folder + 'birds_with_noise_single_notes_new.pickle'
+save_file_name = save_folder + 'rnd.pickle'
 with open(save_file_name, 'wb') as opo:
   pickle.dump(concatenated_pickle, opo)
+import smtplib
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.starttls()
+server.login("mrugankdake@gmail.com", "MRUGank19@")
+message = """From: From Person <from@fromdomain.com>
+To: To Person <to@todomain.com>
+Subject: SMTP e-mail test
+
+This is a test e-mail message.
+"""
+msg = """ From: Mrugank Colab <mrugank@gmail.com>
+To: Mrugank Colab <mrugank@gmail.com>
+Subject: SMTP e-mail test
+
+Hi Mrugank, Mrugank here. Concatenating files is done, finally!"""
+
+server.sendmail("mrugankdake@gmail.com", "mrugankdake@gmail.com", msg)
+server.quit()
