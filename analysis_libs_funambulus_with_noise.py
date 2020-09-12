@@ -40,9 +40,39 @@ def multi_class_classification(X, y, k_fold = 5):
   '''
   X = np.asarray(X)
   y = np.asarray(y)
+  
+  #X_noise = []
+  #X_normal = []
+  #y_noise = []
+  #y_normal = []
+  #new_X_noise = []
+  #new_y_noise = []
+  #for i in range(y.shape[0]):
+  #  if y[i] == 'noise':
+  #    X_noise.append(X[i])
+  #    y_noise.append(y[i])
+  #  else:
+  #    X_normal.append(X[i])
+  #    y_normal.append(y[i])
+  
+  #data_pos = np.arange(len(y_noise))
+  #chosen_data_pos = np.random.choice(data_pos, 10000)
+  
+  #for pos in chosen_data_pos:
+  #  new_X_noise.append(X_noise[pos])
+  #  new_y_noise.append(y_noise[pos])
+
+  #X_normal = np.asarray(X_normal)
+  #new_X_noise = np.asarray(X_noise)
+  #y_normal = np.asarray(y_normal)
+  #new_y_noise = np.asarray(y_noise)
+  
+  #X = np.vstack((X_normal, new_X_noise))
+  #y = np.vstack((y_normal, new_y_noise))
+
 
   # dividing X, y into train and test data
-  sss = StratifiedShuffleSplit(n_splits=k_fold, test_size=0.3, random_state=0)
+  sss = StratifiedShuffleSplit(n_splits=k_fold, test_size=0.2, random_state=0)
 
   # Do K fold cross validation
   all_cms = []

@@ -40,10 +40,13 @@ for f in feats:
     SQUIRRELS_LIST.append(toto)
   SQUIRRELS = np.array(SQUIRRELS_LIST)
   cm, cm_labs, average_acc, accuracies, cm_values = multi_class_classification(SQUIRRELS, species, k_fold=k_folds)
+  #cm1, cm_labs1, average_acc1, accuracies1, cm_values1 = multi_class_classification_a(SQUIRRELS, species, k_fold=k_folds)
+  #cm2, cm_labs2, average_acc2, accuracies2, cm_values2 = multi_class_classification_b(SQUIRRELS, species, k_fold=k_folds)
+  
   plot_multi_class_recalls(accuracies, cm_labs, average_acc, cm_values, 'species', f)
   ax.set_title('Species classification')
   ax.set_xlabel("Squirrel species")
-ax.set_ylabel("F1 score")
+  ax.set_ylabel("F1 score")
 
 png_name = 'rnd classification original.png'
 save_path = os.path.join(Project_path, 'Figures', png_name)   
@@ -65,7 +68,7 @@ msg = """ From: Mrugank Colab <mrugank@gmail.com>
 To: Mrugank Colab <mrugank@gmail.com>
 Subject: SMTP e-mail test
 
-Hi Mrugank, Mrugank here. The random forest has been trained!"""
+Hi Mrugank, Mrugank here. The original random forest has been trained!"""
 
 server.sendmail("mrugankdake@gmail.com", "mrugankdake@gmail.com", msg)
 server.quit()
