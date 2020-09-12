@@ -27,22 +27,3 @@ save_folder = Project_path + '/Data/'
 save_file_name = save_folder + 'rnd.pickle'
 with open(save_file_name, 'wb') as opo:
   pickle.dump(concatenated_pickle, opo)
-import smtplib
-
-server = smtplib.SMTP('smtp.gmail.com', 587)
-server.starttls()
-server.login("mrugankdake@gmail.com", "MRUGank19@")
-message = """From: From Person <from@fromdomain.com>
-To: To Person <to@todomain.com>
-Subject: SMTP e-mail test
-
-This is a test e-mail message.
-"""
-msg = """ From: Mrugank Colab <mrugank@gmail.com>
-To: Mrugank Colab <mrugank@gmail.com>
-Subject: SMTP e-mail test
-
-Hi Mrugank, Mrugank here. Concatenating files is done, finally!"""
-
-server.sendmail("mrugankdake@gmail.com", "mrugankdake@gmail.com", msg)
-server.quit()

@@ -1,3 +1,4 @@
+
 import numpy as np
 import umap
 from sklearn import preprocessing
@@ -55,60 +56,21 @@ def multi_class_classification(X, y, k_fold = 5):
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y[train_index], y[test_index]
     #X_train_corrected = 
-    mofa_train = 0
-    fini_train = 0
-    cuce_train = 0
-    phma_train = 0
-    gaso_train = 0
-    poho_train = 0
-    hyga_train = 0
-    noise_train = 0
-    for i in y_train:
-      if i == 'MOFA':
-        mofa_train += 1
-      elif i == 'FINI':
-        fini_train += 1
-      elif i == 'CUCE':
-        cuce_train += 1
-      elif i == 'PHMA':
-        phma_train += 1
-      elif i == 'GASO':
-        gaso_train += 1
-      elif i == 'POHO':
-        poho_train += 1
-      elif i == 'NOISE':
-        noise_train += 1
-      elif i == 'HYGA':
-        hyga_train += 1
-    
-    mofa_test = 0
-    fini_test = 0
-    cuce_test = 0
-    phma_test = 0
-    gaso_test = 0
-    poho_test = 0
-    hyga_test = 0
-    noise_test = 0
-    for i in y_test:
-      if i == 'MOFA':
-        mofa_test += 1
-      elif i == 'FINI':
-        fini_test += 1
-      elif i == 'CUCE':
-        cuce_test += 1
-      elif i == 'PHMA':
-        phma_test += 1
-      elif i == 'GASO':
-        gaso_test += 1
-      elif i == 'POHO':
-        poho_test += 1
-      elif i == 'NOISE':
-        noise_test += 1
-      elif i == 'HYGA':
-        hyga_test += 1
+    species = ['noise', 'ratufa', 'dusky']
+    train_res = {}
+    test_res = {}
+    for sp in species:
+      train_res[sp] = 0
+      test_res[sp] = 0
 
-    print("mofa_train = {}, fini_train = {}, cuce_train = {}, phma_train = {}, poho_train = {}, noise_train = {}, hyga_train = {}, gaso_train = {}".format(mofa_train, fini_train, cuce_train, phma_train, poho_train, noise_train, hyga_train, gaso_train))
-    print("mofa_test = {}, fini_test = {}, cuce_test = {}, phma_test = {}, poho_test = {}, noise_test = {}, hyga_test = {}, gaso_test{}".format(mofa_test, fini_test, cuce_test, phma_test, poho_test, noise_test, hyga_test, gaso_test))
+    for i in y_train:
+      train_res[i] += 1
+    
+    for i in y_test:
+      test_res[i] += 1
+
+    print("Training set = {}".format(train_res))
+    print("Testing set = {}".format(test_res))
     # training a classifier
     clf = RandomForestClassifier(random_state=0, n_estimators=100)
     clf.fit(X_train, y_train)
