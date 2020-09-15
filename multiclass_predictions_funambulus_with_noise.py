@@ -1,4 +1,5 @@
-from analysis_libs_funambulus_with_noise import multi_class_classification, multi_class_classification_a
+
+from analysis_libs_funambulus_with_noise import multi_class_classification, multi_class_classification_a, random_forest_regressor
 from plot_libs_funambulus import plot_multi_class_recalls
 import matplotlib.pyplot as plt
 import matplotlib
@@ -18,7 +19,7 @@ feats = ['raw_audioset_feats_960ms']
 value = 5000
 # How many training test splits - recommend 5
 k_folds = 10
-
+threshold = 0.5
 # Figure setup
 n_subplots_x = 1
 n_subplots_y = 1
@@ -41,7 +42,8 @@ for f in feats:
     toto = np.array(audio_feats_data[i], dtype = ('O')).astype(np.float)
     SQUIRRELS_LIST.append(toto)
   SQUIRRELS = np.array(SQUIRRELS_LIST)
-  cm, cm_labs, average_acc, accuracies, cm_values = multi_class_classification_a(SQUIRRELS, species, value, k_folds)
+  #cm, cm_labs, average_acc, accuracies, cm_values = multi_class_classification_a(SQUIRRELS, species, value, k_folds)
+  cm, cm_labs, average_acc, accuracies, cm_values = random_forest_regressor(SQUIRRELS, species, threshold, k_folds)
   
   plot_multi_class_recalls(accuracies, cm_labs, average_acc, cm_values, 'species', f)
   ax.set_title('Species classification')
@@ -50,5 +52,5 @@ for f in feats:
 
 png_name = 'rnd 200 trees classification ' + str(value) + '.png'
 save_path = os.path.join(Project_path, 'Figures', png_name)   
-fig.savefig(save_path)
+#fig.savefig(save_path)
 plt.show()
