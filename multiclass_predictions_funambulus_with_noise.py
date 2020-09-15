@@ -43,14 +43,14 @@ for f in feats:
     SQUIRRELS_LIST.append(toto)
   SQUIRRELS = np.array(SQUIRRELS_LIST)
   #cm, cm_labs, average_acc, accuracies, cm_values = multi_class_classification_a(SQUIRRELS, species, value, k_folds)
-  cm, cm_labs, average_acc, accuracies, cm_values = random_forest_regressor(SQUIRRELS, species, threshold, k_folds)
+  cm, cm_labs, average_acc, accuracies, cm_values = random_forest_regressor(SQUIRRELS, species, threshold, value, k_folds)
   
   plot_multi_class_recalls(accuracies, cm_labs, average_acc, cm_values, 'species', f)
   ax.set_title('Species classification')
   ax.set_xlabel("Squirrel species")
   ax.set_ylabel("F1 score")
 
-png_name = 'rnd 200 trees classification ' + str(value) + '.png'
+png_name = 'rnd 500 trees 0.5 threshold regression ' + str(value) + '.png'
 save_path = os.path.join(Project_path, 'Figures', png_name)   
-#fig.savefig(save_path)
+fig.savefig(save_path)
 plt.show()

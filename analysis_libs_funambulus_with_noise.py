@@ -11,6 +11,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import Binarizer
+from sklearn.compose import ColumnTransformer
 from sklearn.metrics import balanced_accuracy_score, f1_score
 import calendar
 import collections
@@ -156,7 +158,7 @@ def multi_class_classification_a(X, y, value, k_fold):
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y[train_index], y[test_index]
     #X_train_corrected = 
-    species = ['noise', 'ratufa', 'dusky']
+    species = [['noise', 'ratufa', 'dusky']]
     train_res = {}
     test_res = {}
     for sp in species:
@@ -207,18 +209,42 @@ def multi_class_classification_a(X, y, value, k_fold):
 
   return cm, cm_labels, average_accuracy, accuracies, cm_values
 
-def random_forest_regressor(X, y, threshold, k_fold = 5):
+def random_forest_regressor(X, y, threshold, value, k_fold = 5):
   X = np.asarray(X)
   y = np.asarray(y)
+  X_noise = []
+  X_normal = []
+  y_noise = []
+  y_normal = []
+  new_X_noise = []
+  new_y_noise = []
+  for i in range(y.shape[0]):
+    if y[i] == 'noise':
+      X_noise.append(X[i])
+      y_noise.append(y[i])
+    else:
+      X_normal.append(X[i])
+      y_normal.append(y[i])
+  data_pos = np.arange(len(y_noise))
+  np.random.seed(0)
+  chosen_data_pos = np.random.choice(data_pos, value)#, random_state = 0)
+  
+  for pos in chosen_data_pos:
+    new_X_noise.append(X_noise[pos])
+    new_y_noise.append(y_noise[pos])
+
+  X_normal = np.asarray(X_normal)
+  new_X_noise = np.asarray(new_X_noise)
+  y_normal = np.asarray(y_normal)
+  new_y_noise = np.asarray(new_y_noise)
+  
+  X = np.concatenate((X_normal, new_X_noise), axis = 0)
+  y = np.concatenate((y_normal, new_y_noise), axis = 0)
+  y[y == 'dusky'] = 'usky'
   y_unique = np.unique(y)
-  enc = OneHotEncoder(sparse = False)#categorical_features = [0])
-  y = y.reshape(y.shape[0], 1)
-  y_regressor = enc.fit_transform(y)
-  C = [[1, 0, 0],
-       [0, 1, 0],
-       [0, 0, 1]]
-  inverted = enc.inverse_transform(C)
-  print(inverted)
+  enc = OneHotEncoder(categories = 'auto', sparse = False, handle_unknown = 'error')
+  y_regressor = enc.fit_transform(y.reshape(y.shape[0], 1))
+  
   # dividing X, y into train and test data
   sss = StratifiedShuffleSplit(n_splits=k_fold, test_size=0.2, random_state=0)
 
@@ -233,20 +259,22 @@ def random_forest_regressor(X, y, threshold, k_fold = 5):
   for k, (train_index, test_index) in enumerate(sss.split(X, y_regressor)):
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y_regressor[train_index], y_regressor[test_index]
-    y_test_cat = enc.fit_transform(y_test)
+    y_test_cat = enc.inverse_transform(y_test)
     # training a classifier
-    clf = RandomForestRegressor(random_state=0, n_estimators=100)
+    clf = RandomForestRegressor(random_state=0, n_estimators=500)
     clf.fit(X_train, y_train)
     predictions = clf.predict(X_test)
-    
-    predictions_cat = enc.fit_transform(predictions)
+    predictions = Binarizer(threshold = threshold).fit_transform(predictions)
+    predictions_cat = enc.inverse_transform(predictions)
+    y_test_cat[y_test_cat == 'usky'] = 'dusky'
+    predictions_cat[predictions_cat == 'usky'] = 'dusky'
     # model accuracy for X_test
-    class_scores = f1_score(y_test,predictions,average=None)
+    class_scores = f1_score(y_test_cat,predictions_cat,average=None)
     print('{}/{} folds mean accuracy: {}'.format(k+1,k_fold,np.mean(class_scores)))
     all_accuracies.append(class_scores)
-
+    y[y == 'usky'] = 'dusky'
     cm_labels = np.unique(y)
-    k_cm = confusion_matrix(y_test, predictions, labels=cm_labels)
+    k_cm = confusion_matrix(y_test_cat, predictions_cat, labels=cm_labels)
     FP = k_cm.sum(axis=0) - np.diag(k_cm)  
     FN = k_cm.sum(axis=1) - np.diag(k_cm)
     TP = np.diag(k_cm)

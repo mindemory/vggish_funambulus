@@ -5,16 +5,20 @@ import random
 import wave
 import contextlib
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import Binarizer
 from imblearn.over_sampling import SMOTE 
 from save_text import make_annotation_file, make_day_annotation_file
 from imblearn.under_sampling import RandomUnderSampler
  
 days = ['02', '04']
-Project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Birds/'
+Project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'
 #/input('Project path: ')
-
+threshold = 0.5
 # Load training data from pickle files
-path_here = os.path.join(Project_path, 'Data/birds_with_noise_single_notes_new.pickle')
+path_here = os.path.join(Project_path, 'Data/rnd.pickle')
 with open(path_here, 'rb') as savef:
   audio_feats_data_training, species_training, num_vecs = np.transpose(np.array(pickle.load(savef)))
 BIRDS_LIST = []
@@ -22,44 +26,31 @@ for i in range(audio_feats_data_training.shape[0]):
   toto = np.array(audio_feats_data_training[i], dtype = ('O')).astype(np.float)
   BIRDS_LIST.append(toto)
 BIRDS = np.array(BIRDS_LIST)
-sm = SMOTE(random_state = 2)
+print(np.unique(species_training))
+#sm = SMOTE(random_state = 2)
 #X_train, y_train = sm.fit_sample(BIRDS, species_training)
 
-rus = RandomUnderSampler(random_state=0)
-X_train, y_train = rus.fit_resample(BIRDS, species_training)
+#rus = RandomUnderSampler(random_state=0)
+#X_train, y_train = rus.fit_resample(BIRDS, species_training)
 
+# Train regressor
+species_training[species_training == 'NOISE'] = 'AAA'
+enc = OneHotEncoder(categories = 'auto', sparse = False, handle_unknown = 'error')
+y_train = enc.fit_transform(species_training.reshape(species_training.shape[0], 1))
+  
+clf = RandomForestRegressor(random_state=0, n_estimators=100)
+clf.fit(BIRDS, y_train)
 
-fini_count = 0
-cuce_count = 0
-mofa_count = 0
-poho_count = 0
-phma_count = 0
-gaso_count = 0
-hyga_count = 0
-noise_count = 0
-for ioio in range(y_train.shape[0]):
-  if y_train[ioio] == 'FINI':
-    fini_count += 1
-  elif y_train[ioio] == 'CUCE':
-    cuce_count += 1
-  elif y_train[ioio] == 'MOFA':
-    mofa_count += 1
-  elif y_train[ioio] == 'POHO':
-    poho_count += 1
-  elif y_train[ioio] == 'PHMA':
-    phma_count += 1
-  elif y_train[ioio] == 'GASO':
-    gaso_count += 1
-  elif y_train[ioio] == 'HYGA':
-    hyga_count += 1
-  elif y_train[ioio] == 'NOISE':
-    noise_count += 1
+species = np.unique(species_training)
+train_res = {}
+for sp in species:
+  train_res[sp] = 0
+  
+for i in species_training:
+  train_res[i] += 1
 
-print('FINI = {}\n CUCE = {}\n MOFA = {}\n POHO = {}\n PHMA = {}\n GASO = {}\n HYGA = {}\n Noise = {}'.format(fini_count, cuce_count, mofa_count, poho_count, phma_count, gaso_count, hyga_count, noise_count))
+print("Training set = {}".format(train_res))
 
-# Train classifier
-clf = RandomForestClassifier(random_state=0, n_estimators=100)
-clf.fit(X_train, y_train)
 
 # Load sound files for annotations
 for day in days:
@@ -67,7 +58,7 @@ for day in days:
   file_names = sorted(os.listdir(folder_name))
   print(['We are on day ' + day])
 
-  save_folder = Project_path + 'ARU_annotations_no_overlap_undersample_notes/'
+  save_folder = Project_path + 'New annotations/regressor_50/'
   day_fold = save_folder + day +'/'
   if not os.path.exists(day_fold):
     os.mkdir(day_fold)
@@ -86,10 +77,15 @@ for day in days:
     with open(pickle_file_path, 'rb') as savef:
       wtf = pickle.load(savef)
     day_label, audio_feats_data, time_stamp = wtf['day'], wtf['raw_audioset_feats_960ms'], wtf['time_stamp']
-    
-    species_prediction.append(clf.predict(audio_feats_data))
+    predictions = clf.predict(audio_feats_data)
+    predictions = Binarizer(threshold = threshold).fit_transform(predictions)
+    predictions_cat = enc.inverse_transform(predictions)
+    predictions_cat[predictions_cat == 'AAA'] = 'NOISE'
+    predictions_cat = predictions_cat.flatten()
+    species_prediction.append(predictions_cat)
     species_prediction_day.append(np.asarray(species_prediction))
     species_prediction = np.transpose(np.asarray(species_prediction))
+    #species_prediction[species_prediction == 'AAA'] = 'NOISE'
     num_preds += species_prediction.shape[0]
     num_preds_file.append(num_preds)
     save_path = save_folder + day + '/' + time_stamp +  '.txt'
@@ -100,6 +96,7 @@ for day in days:
     duration += frames / float(rate)
     duration_files.append(duration)
   species_prediction_day = np.asarray(species_prediction_day)
+  #species_prediction_day[species_prediction_day == 'AAA'] = 'NOISE'
   #print(species_prediction_day[0, 0, :])
   save_path_day = save_folder + day + '.txt'
   make_day_annotation_file(save_path_day, species_prediction_day, num_preds_file, duration_files)

@@ -1,11 +1,11 @@
 import numpy as np
 
 def make_annotation_file(save_path, species):
-  low_freq_dict = {'FINI': 3000, 'CUCE': 2500, 'MOFA': 500, 'POHO': 500, 'PHMA': 3000, 'GASO': 500, 'HYGA': 2000}
-  high_freq_dict = {'FINI': 8000, 'CUCE': 6000, 'MOFA': 3500, 'POHO': 2500, 'PHMA': 7000, 'GASO': 2000, 'HYGA': 6500}
+  low_freq_dict = {'New fini': 3000, 'CUCE': 2500, 'MOFA': 500, 'POHO': 500, 'PHMA': 3000, 'GASO': 500, 'HYGA': 2000}
+  high_freq_dict = {'New fini': 8000, 'CUCE': 6000, 'MOFA': 3500, 'POHO': 2500, 'PHMA': 7000, 'GASO': 2000, 'HYGA': 6500}
   row_count = species.shape[0]
   text_file = open(save_path, 'w+')
-  text_file.write("Selection\t View	Channel	Begin Time (S)\t End Time (S)	Low Freq (Hz)	High Freq (Hz)\t Species\n")
+  text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
   annotation_count = 0
   row = 0
   while row < row_count:
@@ -33,10 +33,10 @@ def make_annotation_file(save_path, species):
   return text_file
 
 def make_day_annotation_file(save_path, species, num_preds_file, duration_files):
-  low_freq_dict = {'FINI': 3000, 'CUCE': 2500, 'MOFA': 500, 'POHO': 500, 'PHMA': 3000, 'GASO': 500, 'HYGA': 2000}
-  high_freq_dict = {'FINI': 8000, 'CUCE': 6000, 'MOFA': 3500, 'POHO': 2500, 'PHMA': 7000, 'GASO': 2000, 'HYGA': 6500}
+  low_freq_dict = {'New fini': 3000, 'CUCE': 2500, 'MOFA': 500, 'POHO': 500, 'PHMA': 3000, 'GASO': 500, 'HYGA': 2000}
+  high_freq_dict = {'New fini': 8000, 'CUCE': 6000, 'MOFA': 3500, 'POHO': 2500, 'PHMA': 7000, 'GASO': 2000, 'HYGA': 6500}
   text_file = open(save_path, 'w+')
-  text_file.write("Selection\t View	Channel	Begin Time (S)\t End Time (S)	Low Freq (Hz)	High Freq (Hz)\t Species\n")
+  text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
   annotation_count = 0
   for file_count in range(len(duration_files) - 1):
     file_length = duration_files[file_count]
