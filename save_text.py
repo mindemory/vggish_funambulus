@@ -1,8 +1,8 @@
 import numpy as np
 
 def make_annotation_file(save_path, species):
-  low_freq_dict = {'dusky': 5000, 'ratufa': 200}
-  high_freq_dict = {'dusky': 11000, 'ratufa': 5000}
+  low_freq_dict = {'dusky': 5000, 'ratufa': 800}
+  high_freq_dict = {'dusky': 11000, 'ratufa': 4000}
   row_count = species.shape[0]
   text_file = open(save_path, 'w+')
   text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
@@ -21,7 +21,7 @@ def make_annotation_file(save_path, species):
       else:
         skip = False
       
-    if species_name != 'NOISE':
+    if species_name != 'noise':
       annotation_count += 1
       begin_time = round(0.960 * row, 2)
       end_time = round(begin_time + skip_annotation_count * 0.960, 2)
@@ -33,14 +33,14 @@ def make_annotation_file(save_path, species):
   return text_file
 
 def make_day_annotation_file(save_path, species, num_preds_file, duration_files):
-  low_freq_dict = {'dusky': 5000, 'ratufa': 200}
-  high_freq_dict = {'dusky': 11000, 'ratufa': 5000}
+  low_freq_dict = {'dusky': 5000, 'ratufa': 800}
+  high_freq_dict = {'dusky': 11000, 'ratufa': 4000}
   text_file = open(save_path, 'w+')
   text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
   annotation_count = 0
   for file_count in range(len(duration_files) - 1):
     file_length = duration_files[file_count]
-    species_in_file = species[file_count, 0, :]
+    species_in_file = species[file_count].flatten()
     column_count = species_in_file.shape[0]
     column = 0
     while column < column_count:
@@ -56,7 +56,7 @@ def make_day_annotation_file(save_path, species, num_preds_file, duration_files)
         else:
           skip = False
       
-      if species_name != 'NOISE':
+      if species_name != 'noise':
         annotation_count += 1
         begin_time = round(0.960 * column + file_length, 2)
         end_time = round(begin_time + skip_annotation_count * 0.960, 2)

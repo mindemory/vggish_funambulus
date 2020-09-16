@@ -299,7 +299,7 @@ def random_forest_regressor(X, y, threshold, value, k_fold = 5):
 
   return cm, cm_labels, average_accuracy, accuracies, cm_values
 
-def rf_classifer_aru(X, y, value):
+def rf_classifier_aru(X, y, value):
   X = np.asarray(X)
   y = np.asarray(y)
   X_noise = []
@@ -332,7 +332,7 @@ def rf_classifer_aru(X, y, value):
   X_train = np.concatenate((X_normal, new_X_noise), axis = 0)
   y_train = np.concatenate((y_normal, new_y_noise), axis = 0)
   
-  species = [['noise', 'ratufa', 'dusky']]
+  species = ['noise', 'ratufa', 'dusky']
   train_res = {}
   for sp in species:
     train_res[sp] = 0

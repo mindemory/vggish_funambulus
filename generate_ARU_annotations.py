@@ -12,9 +12,10 @@ from sklearn.preprocessing import Binarizer
 from imblearn.over_sampling import SMOTE 
 from save_text import make_annotation_file, make_day_annotation_file
 from imblearn.under_sampling import RandomUnderSampler
-from analysis_libs_funambulus_with_noise import random_forest_classifier_aru
+from analysis_libs_funambulus_with_noise import rf_classifier_aru
  
-days = ['02', '04']
+#days = ['02', '04']
+days = ['noise', 'ratufa', 'dusky']
 Project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'
 #/input('Project path: ')
 threshold = 0.5
@@ -30,7 +31,7 @@ for i in range(audio_feats_data_training.shape[0]):
 SQUIRRELS = np.array(SQUIRRELS_LIST)
 print(np.unique(species_training))
 
-clf = random_forest_classifier_aru(SQUIRRELS, species_training, noise_value)
+clf = rf_classifier_aru(SQUIRRELS, species_training, noise_value)
 #sm = SMOTE(random_state = 2)
 #X_train, y_train = sm.fit_sample(BIRDS, species_training)
 
@@ -47,11 +48,12 @@ clf = random_forest_classifier_aru(SQUIRRELS, species_training, noise_value)
 
 # Load sound files for annotations
 for day in days:
-  folder_name = Project_path + 'ARU_embeddings_no_overlap/' + day + '/'
+  folder_name = Project_path + 'ARU_embeddings/' + day + '/'
   file_names = sorted(os.listdir(folder_name))
+  print(file_names[0:3])
   print(['We are on day ' + day])
 
-  save_folder = Project_path + 'Annotations/rnd_classifier/'
+  save_folder = Project_path + 'Annotations/rnd_classifier_5000_100/'
   day_fold = save_folder + day +'/'
   if not os.path.exists(day_fold):
     os.mkdir(day_fold)
@@ -69,7 +71,7 @@ for day in days:
     wav_file_path = os.path.join(Project_path, 'ARU_Test', day, FILE[:-7] + '.wav')
     with open(pickle_file_path, 'rb') as savef:
       wtf = pickle.load(savef)
-    day_label, audio_feats_data, time_stamp = wtf['day'], wtf['raw_audioset_feats_960ms'], wtf['time_stamp']
+    audio_feats_data, time_stamp = wtf['raw_audioset_feats_960ms'], wtf['file_name']
     predictions = clf.predict(audio_feats_data)
     #predictions = Binarizer(threshold = threshold).fit_transform(predictions)
     #predictions_cat = enc.inverse_transform(predictions)
@@ -77,8 +79,9 @@ for day in days:
     #predictions_cat = predictions_cat.flatten()
     #species_prediction.append(predictions_cat)
     species_prediction.append(predictions)
-    species_prediction_day.append(np.asarray(species_prediction))
+    
     species_prediction = np.transpose(np.asarray(species_prediction))
+    species_prediction_day.append(np.asarray(species_prediction))
     #species_prediction[species_prediction == 'AAA'] = 'NOISE'
     num_preds += species_prediction.shape[0]
     num_preds_file.append(num_preds)
