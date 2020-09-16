@@ -298,3 +298,48 @@ def random_forest_regressor(X, y, threshold, value, k_fold = 5):
   cm = np.mean(np.asarray(all_cms),axis=0)
 
   return cm, cm_labels, average_accuracy, accuracies, cm_values
+
+def rf_classifer_aru(X, y, value):
+  X = np.asarray(X)
+  y = np.asarray(y)
+  X_noise = []
+  X_normal = []
+  y_noise = []
+  y_normal = []
+  new_X_noise = []
+  new_y_noise = []
+  for i in range(y.shape[0]):
+    if y[i] == 'noise':
+      X_noise.append(X[i])
+      y_noise.append(y[i])
+    else:
+      X_normal.append(X[i])
+      y_normal.append(y[i])
+  
+  data_pos = np.arange(len(y_noise))
+  np.random.seed(0)
+  chosen_data_pos = np.random.choice(data_pos, value)
+  
+  for pos in chosen_data_pos:
+    new_X_noise.append(X_noise[pos])
+    new_y_noise.append(y_noise[pos])
+
+  X_normal = np.asarray(X_normal)
+  new_X_noise = np.asarray(new_X_noise)
+  y_normal = np.asarray(y_normal)
+  new_y_noise = np.asarray(new_y_noise)
+  
+  X_train = np.concatenate((X_normal, new_X_noise), axis = 0)
+  y_train = np.concatenate((y_normal, new_y_noise), axis = 0)
+  
+  species = [['noise', 'ratufa', 'dusky']]
+  train_res = {}
+  for sp in species:
+    train_res[sp] = 0
+  
+  for i in y_train:
+    train_res[i] += 1
+  print("Training set = {}".format(train_res))
+  clf = RandomForestClassifier(random_state=0, n_estimators=200)#, max_features = 100)
+  clf.fit(X_train, y_train)
+  return clf
