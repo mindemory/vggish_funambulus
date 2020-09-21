@@ -15,7 +15,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from analysis_libs_funambulus_with_noise import rf_classifier_aru
  
 #days = ['02', '04']
-days = ['noise', 'ratufa', 'dusky']
+days = ['ratufa_whole_day', 'dusky']
 Project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'
 #/input('Project path: ')
 threshold = 0.5
