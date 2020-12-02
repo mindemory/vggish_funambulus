@@ -12,7 +12,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import Binarizer
-from sklearn.compose import ColumnTransformer
 from sklearn.metrics import balanced_accuracy_score, f1_score
 import calendar
 import collections
@@ -44,7 +43,13 @@ def multi_class_classification(X, y, k_fold = 5):
   '''
   X = np.asarray(X)
   y = np.asarray(y)
-
+  y_unique = np.unique(y)	
+  train_res = {}	
+  test_res = {}	
+  for sp in y_unique:	
+    train_res[sp] = 0	
+    test_res[sp] = 0	
+  
   # dividing X, y into train and test data
   sss = StratifiedShuffleSplit(n_splits=k_fold, test_size=0.2, random_state=0)
 
@@ -299,9 +304,10 @@ def random_forest_regressor(X, y, threshold, value, k_fold = 5):
 
   return cm, cm_labels, average_accuracy, accuracies, cm_values
 
-def rf_classifier_aru(X, y, value):
+def rf_classifier_aru(X, y, value, trees, depth, samplesplit, samplesleaf, bootstrap, randomstate, classweight):	
   X = np.asarray(X)
   y = np.asarray(y)
+  species = np.unique(y)	
   X_noise = []
   X_normal = []
   y_noise = []
@@ -332,7 +338,6 @@ def rf_classifier_aru(X, y, value):
   X_train = np.concatenate((X_normal, new_X_noise), axis = 0)
   y_train = np.concatenate((y_normal, new_y_noise), axis = 0)
   
-  species = ['noise', 'ratufa', 'dusky']
   train_res = {}
   for sp in species:
     train_res[sp] = 0
@@ -340,6 +345,22 @@ def rf_classifier_aru(X, y, value):
   for i in y_train:
     train_res[i] += 1
   print("Training set = {}".format(train_res))
-  clf = RandomForestClassifier(random_state=0, n_estimators=200)#, max_features = 100)
+  
+  clf = RandomForestClassifier(n_estimators=trees, max_depth = depth, min_samples_split = samplesplit, min_samples_leaf = samplesleaf, bootstrap=bootstrap, random_state = randomstate, class_weight = classweight)	
+  clf.fit(X_train, y_train)	
+  return clf	
+def rf_classifier_aru_simple(X, y):#, trees, features, ):	
+  X_train = np.asarray(X)	
+  y_train = np.asarray(y)	
+  species = np.unique(y)	
+  	
+  train_res = {}	
+  for sp in species:	
+    train_res[sp] = 0	
+  	
+  for i in y_train:	
+    train_res[i] += 1	
+  print("Training set = {}".format(train_res))	
+  clf = RandomForestClassifier(random_state=0, n_estimators=100)#, max_features = 100)	
   clf.fit(X_train, y_train)
   return clf
