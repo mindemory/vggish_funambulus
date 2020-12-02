@@ -3,10 +3,10 @@ import numpy as np
 import os
 import random
 
-#species = ['CUCE', 'FINI', 'GASO', 'HYGA', 'MOFA', 'NOISE', 'PHMA', 'POHO']
 species = ['dusky', 'ratufa', 'noise']
 concatenated_pickle = []
-Project_path = input('Project path: ')
+#Project_path = input('Project path: ')
+Project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'	
 for spp in species:
   folder_name = Project_path + 'squirrel_note_embeddings/' + spp + '/'
   file_names = os.listdir(folder_name)
