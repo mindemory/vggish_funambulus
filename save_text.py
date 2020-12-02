@@ -23,8 +23,8 @@ def make_annotation_file(save_path, species):
       
     if species_name != 'noise':
       annotation_count += 1
-      begin_time = round(0.960 * row, 2)
-      end_time = round(begin_time + skip_annotation_count * 0.960, 2)
+      begin_time = round(0.960 * row, 5)
+      end_time = round(begin_time + skip_annotation_count * 0.960, 5)
       low_freq = low_freq_dict[species_name]
       high_freq = high_freq_dict[species_name]
       row_input = "{}\t Spectrogram 1\t 1\t {}\t {}\t {}\t {}\t {}\n".format(annotation_count, begin_time, end_time, low_freq, high_freq, species_name)
@@ -58,8 +58,8 @@ def make_day_annotation_file(save_path, species, num_preds_file, duration_files)
       
       if species_name != 'noise':
         annotation_count += 1
-        begin_time = round(0.960 * column + file_length, 2)
-        end_time = round(begin_time + skip_annotation_count * 0.960, 2)
+        begin_time = round(0.960 * column + file_length, 5)
+        end_time = round(begin_time + skip_annotation_count * 0.960, 5)
         low_freq = low_freq_dict[species_name]
         high_freq = high_freq_dict[species_name]
         row_input = "{}\t Spectrogram 1\t 1\t {}\t {}\t {}\t {}\t {}\n".format(annotation_count, begin_time, end_time, low_freq, high_freq, species_name)
