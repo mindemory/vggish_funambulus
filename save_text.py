@@ -3,6 +3,7 @@ import numpy as np
 def make_annotation_file(save_path, species):
   low_freq_dict = {'dusky': 5000, 'ratufa': 800}
   high_freq_dict = {'dusky': 11000, 'ratufa': 4000}
+  max_annotation_dict = {'dusky': 0, 'ratufa': 0}
   row_count = species.shape[0]
   text_file = open(save_path, 'w+')
   text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
@@ -14,7 +15,7 @@ def make_annotation_file(save_path, species):
     skip_annotation_count = 1
     while skip == True:
       if row + skip_annotation_count < row_count:
-        if species[row] ==  species[row + skip_annotation_count]:
+        if species[row] ==  species[row + skip_annotation_count] and skip_annotation_count <= max_annotation_count:
             skip_annotation_count += 1
         else:
           skip = False
@@ -35,6 +36,7 @@ def make_annotation_file(save_path, species):
 def make_day_annotation_file(save_path, species, num_preds_file, duration_files):
   low_freq_dict = {'dusky': 5000, 'ratufa': 800}
   high_freq_dict = {'dusky': 11000, 'ratufa': 4000}
+  max_annotation_dict = {'dusky': 0, 'ratufa': 0}
   text_file = open(save_path, 'w+')
   text_file.write("Selection\t View\t Channel\t Begin Time (S)\t End Time (S)\t Low Freq (Hz)\t High Freq (Hz)\t Species\n")
   annotation_count = 0
@@ -48,7 +50,7 @@ def make_day_annotation_file(save_path, species, num_preds_file, duration_files)
       skip = True
       skip_annotation_count = 1
       while skip == True:
-        if column + skip_annotation_count < column_count:
+        if column + skip_annotation_count < column_count and skip_annotation_count <= max_annotation_count:
           if species_in_file[column] ==  species_in_file[column + skip_annotation_count]:
               skip_annotation_count += 1
           else:
