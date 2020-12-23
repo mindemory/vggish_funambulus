@@ -304,7 +304,7 @@ def random_forest_regressor(X, y, threshold, value, k_fold = 5):
 
   return cm, cm_labels, average_accuracy, accuracies, cm_values
 
-def rf_classifier_aru(X, y, value, trees, depth, randomstate, classw):        
+def rf_classifier_aru(X, y, value, trees, depth, randomstate, classw, btw):        
   X = np.asarray(X)
   y = np.asarray(y)
   species = np.unique(y)        
@@ -347,7 +347,7 @@ def rf_classifier_aru(X, y, value, trees, depth, randomstate, classw):
   print("Training set = {}".format(train_res))
   
   #clf = RandomForestClassifier(n_estimators=trees, max_depth = depth, min_samples_split = samplesplit, min_samples_leaf = samplesleaf, bootstrap=bootstrap, random_state = randomstate, class_weight = classweight)
-  clf = RandomForestClassifier(n_estimators=trees, max_depth = depth, random_state = randomstate, class_weight = classw)     
+  clf = RandomForestClassifier(n_estimators=trees, max_depth = depth, random_state = randomstate, class_weight = classw, bootstrap = btw)     
   clf.fit(X_train, y_train)     
   return clf    
 def rf_classifier_aru_simple(X, y):#, trees, features, ):       
