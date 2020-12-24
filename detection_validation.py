@@ -22,17 +22,10 @@ val_file_name = project_path + 'detector_validation/detector_validation.txt'
 text_file = open(val_file_name, 'w')
 text_file.write("Model\t Folder\t ratufa Total detections\t ratufa Total annotations\t ratufa TP\t ratufa FP\t ratufa FN\t ratufa TN\t ratufa Precison\t ratufa Recall\t ratufa F1\t dusky Total detections\t dusky Total annotations\t dusky TP\t dusky FP\t dusky FN\t dusky TN\t dusky Precison\t dusky Recall\t dusky F1\n")
 del_t = 0.1
-#NOISE = [3000]#, 5000, 10000]
-#TREES = [100]#, 300, 500, 1000]   
-#DEPTH = [50]#, 80, 100, 120]
-#for depth in DEPTH: 
-#  for tree_count in TREES:      
-#    for noise_value in NOISE:
 CLASSIFIERS = os.listdir(detections_path)
 for classifier in CLASSIFIERS:
   print('We are in classifier = {}'.format(classifier))
   days = ['ratufa_whole_day', 'dusky']
-  #/Detecions/'
   spec_dict = {'dusky':'dusky', ' dusky':'dusky', ' ratufa':'ratufa', 'ratufa':'ratufa', 'dusky_training_19+SNP':'dusky', ' dusky_training_19+SNP':'dusky'}
   tp = {}
   tn = {}
@@ -43,14 +36,11 @@ for classifier in CLASSIFIERS:
   F1 = {}
 
   OMG_bored = ['ratufa', 'dusky']
-  #time_array_file = [0,0.96,1.92,2.88,3.84,4.8,5.76,6.72,7.68,8.64,9.6,10.56,11.52,12.48,13.44,14.4,15.36,16.32,17.28,18.24,19.2,20.16,21.12,22.08,23.04,24,24.96,25.92,26.88,27.84,28.8,29.76,30.72,31.68,32.64,33.6,34.56,35.52,36.48,37.44,38.4,39.36,40.32,41.28,42.24,43.2,44.16,45.12,46.08,47.04,48,48.96,49.92,50.88,51.84,52.8,53.76,54.72,55.68,56.64,57.6,58.56,59.52,60.48,61.44,62.4,63.36,64.32,65.28,66.24,67.2,68.16,69.12,70.08,71.04,72,72.96,73.92,74.88,75.84,76.8,77.76,78.72,79.68,80.64,81.6,82.56,83.52,84.48,85.44,86.4,87.36,88.32,89.28,90.24,91.2,92.16,93.12,94.08,95.04,96,96.96,97.92,98.88,99.84,100.8,101.76,102.72,103.68,104.64,105.6,106.56,107.52,108.48,109.44,110.4,111.36,112.32,113.28,114.24,115.2,116.16,117.12,118.08,119.04,120,120.96,121.92,122.88,123.84,124.8,125.76,126.72,127.68,128.64,129.6,130.56,131.52,132.48,133.44,134.4,135.36,136.32,137.28,138.24,139.2,140.16,141.12,142.08,143.04,144,144.96,145.92,146.88,147.84,148.8,149.76,150.72,151.68,152.64,153.6,154.56,155.52,156.48,157.44,158.4,159.36,160.32,161.28,162.24,163.2,164.16,165.12,166.08,167.04,168,168.96,169.92,170.88,171.84,172.8,173.76,174.72,175.68,176.64,177.6,178.56,179.52,180.48,181.44,182.4,183.36,184.32,185.28,186.24,187.2,188.16,189.12,190.08,191.04,192,192.96,193.92,194.88,195.84,196.8,197.76,198.72,199.68,200.64,201.6,202.56,203.52,204.48,205.44,206.4,207.36,208.32,209.28,210.24,211.2,212.16,213.12,214.08,215.04,216,216.96,217.92,218.88,219.84,220.8,221.76,222.72,223.68,224.64,225.6,226.56,227.52,228.48,229.44,230.4,231.36,232.32,233.28,234.24,235.2,236.16,237.12,238.08,239.04,240,240.96,241.92,242.88,243.84,244.8,245.76,246.72,247.68,248.64,249.6,250.56,251.52,252.48,253.44,254.4,255.36,256.32,257.28,258.24,259.2,260.16,261.12,262.08,263.04,264,264.96,265.92,266.88,267.84,268.8,269.76,270.72,271.68,272.64,273.6,274.56,275.52,276.48,277.44,278.4,279.36,280.32,281.28,282.24,283.2,284.16,285.12,286.08,287.04,288,288.96,289.92,290.88,291.84,292.8,293.76,294.72,295.68,296.64,297.6,298.56]
-  #time_array = [0, 0.096, 0.192, 0.288, 0.384, 0.48, 0.576, 0.672, 0.768, 0.864, 0.96, 1.056, 1.152, 1.248, 1.344, 1.44, 1.536, 1.632, 1.728, 1.824]
   species_column_dict = {}
   for i in range(len(OMG_bored)):
     species_column_dict[OMG_bored[i]] = i + 1
 
   for day in days:
-    #print(day)
     for OMG in OMG_bored:
       tp[OMG] = 0
       tn[OMG] = 0
@@ -74,15 +64,12 @@ for classifier in CLASSIFIERS:
     with open(detection_file_path, 'r') as dn:
       species_dn = np.asarray([row_dn2[7] for row_dn2 in csv.reader(dn, delimiter = '\t')])[1:]
     species_dn = np.asarray([spec_dict[sp] for sp in species_dn])
-    #time_array = []
     if day == 'dusky':
       annotation_file = 'dusky.txt'
       time_array = time_array_dusky
-      #time_array = [round(a, 2) for a in times]
     else:
       annotation_file = 'ratufa.txt'
       time_array = time_array_ratufa
-      #time_array = [round(a, 2) for a in times]
 
     detections = np.zeros((len(time_array), len(OMG_bored) + 1))
     annotations = np.zeros((len(time_array), len(OMG_bored)+ 1))
@@ -92,9 +79,8 @@ for classifier in CLASSIFIERS:
     for i in range(begin_time_dn.shape[0]):
       btdn = round(begin_time_dn[i], 2)
       detection_row = np.where(abs(detections[:, 0] - btdn) <= 0.01)[0][0]
-      #print(btdn, detection_row)
       detections[detection_row, species_column_dict[species_dn[i]]] = 1
-    #print()
+
     annotation_file_path = os.path.join(annotation_folder, annotation_file)
     with open(annotation_file_path, 'r') as an:
       begin_time_an = np.asarray([row_an0[3] for row_an0 in csv.reader(an, delimiter = '\t')])[1:]
@@ -113,7 +99,6 @@ for classifier in CLASSIFIERS:
         etan = end_time_an[j]
         if ((t+del_t < btan < t+0.96-del_t) or (t+del_t < etan < t+0.96-del_t) or (btan <= t and etan >= t+0.96)):
           annotation_row = np.where(annotations[:, 0] == t)[0][0]
-          #print(annotation_row)
           annotations[annotation_row, species_column_dict[species_an[j]]] = 1
       
     for spp in OMG_bored:
