@@ -17,15 +17,15 @@ from save_text import make_annotation_file, make_day_annotation_file
 from imblearn.under_sampling import RandomUnderSampler
 from analysis_libs_funambulus_with_noise import rf_classifier_aru, rf_classifier_aru_simple  
 
-NOISE = [3000, 5000, 10000]        
-TREES = [100, 300, 500, 1000]   
-DEPTH = [50, 80, 100, 120]      
+NOISE = [3000]#, 5000, 10000]        
+TREES = [100]#, 300, 500, 1000]   
+DEPTH = [50]#, 80, 100, 120]      
 #SAMPLESPLIT = 2#, 5, 10, 15, 20, 50, 100]       
 #max_depth = 50  
 #samplesleaf = 1 
-BOOTSTRAP = [True, False]        
+BOOTSTRAP = [True]#, False]        
 randomstate = 0 
-classweight = ['balanced', 'balanced_subsample']
+classweight = ['balanced']#, 'balanced_subsample']
 for bootstrap in BOOTSTRAP:
   for classw in classweight:     
     for depth in DEPTH: 
