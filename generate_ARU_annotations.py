@@ -23,7 +23,7 @@ DEPTH = [50]#, 80, 100, 120]
 #SAMPLESPLIT = 2#, 5, 10, 15, 20, 50, 100]       
 #max_depth = 50  
 #samplesleaf = 1 
-BOOTSTRAP = [True]#, False]        
+BOOTSTRAP = [True, False]        
 randomstate = 0 
 classweight = ['balanced']#, 'balanced_subsample']
 for bootstrap in BOOTSTRAP:

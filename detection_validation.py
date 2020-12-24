@@ -7,6 +7,17 @@ from sklearn.metrics import confusion_matrix
 
 project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'
 detections_path = os.path.join(project_path, 'Detections19')
+
+dusky_time_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/Annotations/dusky_time.txt'
+ratufa_time_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/Annotations/ratufa_whole_day_time.txt'
+with open(dusky_time_path, 'r') as dtp:
+  time_array_dusky = np.asarray([row_dtp[3] for row_dtp in csv.reader(dtp, delimiter = '\t')])[1:]
+time_array_dusky = np.asarray([float(a) for a in time_array_dusky])
+with open(ratufa_time_path, 'r') as rtp:
+  time_array_ratufa = np.asarray([row_rtp[3] for row_rtp in csv.reader(rtp, delimiter = '\t')])[1:]
+time_array_ratufa = np.asarray([float(b) for b in time_array_ratufa])
+
+
 val_file_name = project_path + 'detector_validation/detector_validation.txt'
 text_file = open(val_file_name, 'w')
 text_file.write("Model\t Folder\t ratufa Total detections\t ratufa Total annotations\t ratufa TP\t ratufa FP\t ratufa FN\t ratufa TN\t ratufa Precison\t ratufa Recall\t ratufa F1\t dusky Total detections\t dusky Total annotations\t dusky TP\t dusky FP\t dusky FN\t dusky TN\t dusky Precison\t dusky Recall\t dusky F1\n")
@@ -66,11 +77,11 @@ for classifier in CLASSIFIERS:
     #time_array = []
     if day == 'dusky':
       annotation_file = 'dusky.txt'
-      time_array = np.arange(0, 10800, 0.96)
+      time_array = time_array_dusky
       #time_array = [round(a, 2) for a in times]
     else:
       annotation_file = 'ratufa.txt'
-      time_array = np.arange(0, 37488, 0.96)
+      time_array = time_array_ratufa
       #time_array = [round(a, 2) for a in times]
 
     detections = np.zeros((len(time_array), len(OMG_bored) + 1))
@@ -83,7 +94,7 @@ for classifier in CLASSIFIERS:
       detection_row = np.where(abs(detections[:, 0] - btdn) <= 0.01)[0][0]
       #print(btdn, detection_row)
       detections[detection_row, species_column_dict[species_dn[i]]] = 1
-    print()
+    #print()
     annotation_file_path = os.path.join(annotation_folder, annotation_file)
     with open(annotation_file_path, 'r') as an:
       begin_time_an = np.asarray([row_an0[3] for row_an0 in csv.reader(an, delimiter = '\t')])[1:]
@@ -131,8 +142,6 @@ for classifier in CLASSIFIERS:
       else:
         F1[omg] = 100
     print(tp, fp, fn, tn)
-  #text_file.write("Model\t Folder\t ratufa Total detections\t ratufa Total annotations\t ratufa TP\t ratufa FP\t ratufa FN\t ratufa TN\t ratufa Precison\t ratufa Recall\t ratufa F1\t dusky Total detections\t dusky Total annotations\t dusky TP\t dusky FP\t dusky FN\t dusky TN\t dusky Precison\t dusky Recall\t dusky F1\n")
-
-    #for popo in OMG_bored:
+  
     text_file.write(classifier+'\t'+day+'\t'+ str(tp[OMG_bored[0]] + fp[OMG_bored[0]])+'\t'+str(tp[OMG_bored[0]] +fn[OMG_bored[0]])+'\t'+str(tp[OMG_bored[0]])+'\t'+str(fp[OMG_bored[0]])+'\t'+str(fn[OMG_bored[0]])+'\t'+str(tn[OMG_bored[0]])+'\t'+str(precision[OMG_bored[0]])+'\t'+str(recall[OMG_bored[0]])+'\t'+str(F1[OMG_bored[0]])+'\t'+ str(tp[OMG_bored[1]] + fp[OMG_bored[1]])+'\t'+str(tp[OMG_bored[1]] +fn[OMG_bored[1]])+'\t'+str(tp[OMG_bored[1]])+'\t'+str(fp[OMG_bored[1]])+'\t'+str(fn[OMG_bored[1]])+'\t'+str(tn[OMG_bored[1]])+'\t'+str(precision[OMG_bored[1]])+'\t'+str(recall[OMG_bored[1]])+'\t'+str(F1[OMG_bored[1]])+'\n')
-  text_file.close()
+text_file.close()
