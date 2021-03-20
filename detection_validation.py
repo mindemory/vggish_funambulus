@@ -6,7 +6,7 @@ from sklearn.metrics import confusion_matrix
 
 
 project_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/'
-detections_path = os.path.join(project_path, 'Detections19')
+detections_path = os.path.join(project_path, 'Detections_neural_network_classifier/layer_1')
 
 dusky_time_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/Annotations/dusky_time.txt'
 ratufa_time_path = '/content/drive/My Drive/Sciurid Lab/CNN/VGGish_Squirrels/Annotations/ratufa_whole_day_time.txt'
@@ -18,7 +18,7 @@ with open(ratufa_time_path, 'r') as rtp:
 time_array_ratufa = np.asarray([float(b) for b in time_array_ratufa])
 
 
-val_file_name = project_path + 'detector_validation/detector_validation.txt'
+val_file_name = project_path + 'detector_validation/detector_validation_neural_network_layer_1.txt'
 text_file = open(val_file_name, 'w')
 text_file.write("Model\t Folder\t ratufa Total detections\t ratufa Total annotations\t ratufa TP\t ratufa FP\t ratufa FN\t ratufa TN\t ratufa Precison\t ratufa Recall\t ratufa F1\t dusky Total detections\t dusky Total annotations\t dusky TP\t dusky FP\t dusky FN\t dusky TN\t dusky Precison\t dusky Recall\t dusky F1\n")
 del_t = 0.1
@@ -51,7 +51,7 @@ for classifier in CLASSIFIERS:
       F1[OMG] = 0
 
     #*******************************************************************************#
-    detection_folder = os.path.join(project_path, 'Detections19', classifier)
+    detection_folder = os.path.join(project_path, 'Detections_neural_network_classifier/layer_1', classifier)
     annotation_folder = os.path.join(project_path, 'Annotations')
     detection_file_path = os.path.join(detection_folder, day + '.txt')
     
