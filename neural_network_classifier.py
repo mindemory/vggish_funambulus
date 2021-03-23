@@ -5,10 +5,11 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense
 
-def get_model(neurons0, neurons1, activation_function, input_shape):
+def get_model(neurons0, neurons1, neurons2, activation_function0, activation_function1, input_shape):
   model = Sequential()
-  model.add(Dense(neurons0, activation = activation_function, input_shape = (input_shape, ))) 
-  model.add(Dense(neurons1, activation = 'softmax'))
+  model.add(Dense(neurons0, activation = activation_function0, input_shape = (input_shape, )))
+  model.add(Dense(neurons1, activation = activation_function1))
+  model.add(Dense(neurons2, activation = 'softmax'))
   return model    
 
 def classifier(neurons0, neurons1, activation_function, input_shape, strategy):
